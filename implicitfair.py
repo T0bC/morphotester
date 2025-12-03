@@ -42,7 +42,7 @@ def laplaciantension(vertex, faceindex, vert_tri_dict):
                     if bf[2] == i:
                         v = (bf[0],bf[1])
                     else:
-                        print "Problem in face ring."
+                        print("Problem in face ring.")
             j = v[0]
             k = v[1]
             vi = vertex[i]
@@ -83,7 +83,7 @@ def smooth(vertex, faceindex, iternum, stepsize, vert_tri_dict):
     try:
         R = cholesky(tochol).T # Upper-triangular matrix cholesky decomposition (.T makes it upper, normally it spits out lower)
     except LinAlgError:
-        print "Cholesky decomposition cannot be computed, mesh matrix is not positive definite."
+        print("Cholesky decomposition cannot be computed, mesh matrix is not positive definite.")
         return "!"
     
     for k in range(0,iternum):

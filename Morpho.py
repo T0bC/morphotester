@@ -591,7 +591,8 @@ class HBoxWidget(QtGui.QWidget):
     def initUI(self, widgetlist, indent, spacing):
         """Adds widgets to and sets layout of HBoxWidget object."""
         self.hbox = QtGui.QHBoxLayout()
-        map(lambda x: self.hbox.addWidget(x), widgetlist)
+        for x in widgetlist:
+            self.hbox.addWidget(x)
         self.hbox.setContentsMargins(indent,0,0,0)
         self.hbox.setSpacing(spacing)
         self.setLayout(self.hbox)
@@ -613,7 +614,8 @@ class VGroupBoxWidget(QtGui.QGroupBox):
         self.vbox = QtGui.QVBoxLayout()
         self.vbox.setContentsMargins(10,10,10,10)
         self.vbox.setSpacing(10)
-        map(lambda x: self.vbox.addWidget(x), widgetlist)
+        for x in widgetlist:
+            self.vbox.addWidget(x)
         self.setLayout(self.vbox)
         self.setCheckable(1)
         self.setStyleSheet('QGroupBox::title {background-color: transparent}')

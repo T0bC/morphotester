@@ -86,7 +86,7 @@ def Main():
             newfilename = filename[:-4] + addendum + ".ply"
             plython.SaveArray(mesh[0],mesh[2],os.path.join(dirpath,newfilename))
         else:
-            print str(filename)+" is not a .ply file. Continuing to next file in directory."
+            print(str(filename)+" is not a .ply file. Continuing to next file in directory.")
             
 if __name__ == "__main__":
     Main()   

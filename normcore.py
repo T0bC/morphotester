@@ -40,9 +40,9 @@ def computenormal(varray, faceindex, fvarray, vfarray):
     
     # unit normals of vertices    
     vnormal = zeros([nvert,3],float)
-    for vindex, faces in vfarray.iteritems():
+    for vindex, faces in vfarray.items():
         vnormal[vindex] = sum(fnormal4[faces], axis=0)
-        if isnan(fnormal4[faces]).any(): print "nan found during vertex normal creation at vertex #: " + str(vindex)    
+        if isnan(fnormal4[faces]).any(): print("nan found during vertex normal creation at vertex #: " + str(vindex))    
      
     # normalize vertex normals
     vnormal4 = normalize(vnormal)
@@ -50,9 +50,9 @@ def computenormal(varray, faceindex, fvarray, vfarray):
     # check for nan values in vnormal4
     for i, norm in enumerate(vnormal4):
         if isnan(norm).any():
-            print "nan vnormal 4 entry found"
-            print "corresponding vnormal entry:"
-            print norm
+            print("nan vnormal 4 entry found")
+            print("corresponding vnormal entry:")
+            print(norm)
     
     # enforce that normals are outward
     mvertex = mean(varray,1)    
@@ -68,7 +68,7 @@ def computenormal(varray, faceindex, fvarray, vfarray):
         if i < 0:
             s3 += 1
     if s2 < s3:
-        print 'Outward normal flipping has occurred'
+        print('Outward normal flipping has occurred')
         vnormal4 = -vnormal4
         fnormal4 = -fnormal4
 

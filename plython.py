@@ -51,7 +51,7 @@ class PlythonMesh(object):
         self.nvert = 0
         self.nface = 0
         
-        if filepath is not "":
+        if filepath != "":
             self.CreateArray(filepath)
     
     def CreateArray(self, filepath): 
@@ -61,19 +61,24 @@ class PlythonMesh(object):
             filepath (str): Path to a .ply polygon mesh file.
         
         """
-        meshfile = open(filepath, 'r') 
-        meshstring = meshfile.read()
-        meshfile.close()
+        # Read file in binary mode first to handle both ASCII and binary PLY files
+        with open(filepath, 'rb') as meshfile:
+            meshbytes = meshfile.read()
         
+        # Decode header as ASCII to parse format info
+        header_end = meshbytes.find(b'end_header')
+        header = meshbytes[:header_end].decode('ascii')
         
-        datamode = self._StringAfter(meshstring, 'format')
-        self.nvert = int(self._StringAfter(meshstring,'element vertex'))
-        self.nface = int(self._StringAfter(meshstring,'element face'))
+        datamode = self._StringAfter(header, 'format')
+        self.nvert = int(self._StringAfter(header,'element vertex'))
+        self.nface = int(self._StringAfter(header,'element face'))
         
         if datamode == "ascii" or datamode == "ASCII":
+            # For ASCII, decode the entire file as text
+            meshstring = meshbytes.decode('ascii')
             self.vertices, self.faces, self.triverts = self._read_ascii(meshstring)
         else:
-            self.vertices, self.faces, self.triverts = self._read_bin(meshstring, datamode)
+            self.vertices, self.faces, self.triverts = self._read_bin(meshbytes, datamode)
         
         self.mesh = [self.vertices, self.triverts, self.faces]
         
@@ -102,14 +107,14 @@ class PlythonMesh(object):
         
         return varray, farray, vfarray 
     
-    def _read_bin(self, meshstring, mode):
+    def _read_bin(self, meshbytes, mode):
         """Reads binary mesh data."""
         if mode == "binary_little_endian":
             byteorder = "<"
         elif mode == "binary_big_endian":
             byteorder = ">"
         
-        meshdata = meshstring[meshstring.find('end_header')+11:]
+        meshdata = meshbytes[meshbytes.find(b'end_header')+11:]
         
         # Expected number of bytes for vertex data, assumes 3 XYZ coordinate float values
         vertbytes = self.nvert*3*4
@@ -126,11 +131,11 @@ class PlythonMesh(object):
         
         facedata = meshdata[vertbytes:vertbytes+facebytes]
         
-        if unpack(byteorder+'B', facedata[0])[0] != 3:
+        if unpack(byteorder+'B', facedata[0:1])[0] != 3:
             raise ValueError('Non-triangular polygons found within .PLY file.')
         
         vert_xyz_split = [vertdata[i:i+4] for i in range(0, vertbytes, 4)]
-        vert_xyz_points = map(lambda x: unpack(byteorder+'f', x)[0], vert_xyz_split)
+        vert_xyz_points = [unpack(byteorder+'f', x)[0] for x in vert_xyz_split]
         vert_array = array(vert_xyz_points)
         vert_array = vert_array.reshape([self.nvert,3])
         
