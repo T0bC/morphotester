@@ -11,7 +11,7 @@ further details on method.
 import implicitfair
 import normcore
 from copy import copy as pcopy
-from numpy import zeros, transpose, nonzero, sqrt, sum, trace, mat, array, dot, isnan, copy, array_equal
+from numpy import zeros, transpose, nonzero, sqrt, sum, trace, asmatrix, array, dot, isnan, copy, array_equal
 from numpy.linalg import cond, LinAlgError
 from scipy.sparse import lil_matrix
 from scipy.stats import scoreatpercentile
@@ -144,7 +144,7 @@ class MeshDNE(object):
     
         fstarh = array(([dot(c1,c1), dot(c1,c2)], [dot(c2,c1), dot(c2,c2)]))
     
-        gm = mat(g)  
+        gm = asmatrix(g)  
         
         try:
             gminv = gm.I

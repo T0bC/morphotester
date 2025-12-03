@@ -9,7 +9,7 @@ details on method.
 '''
 
 from copy import copy as pcopy
-from numpy import array, matrix, mat, transpose, average, subtract, row_stack
+from numpy import array, asmatrix, transpose, average, subtract, row_stack
 from numpy import mean as amean
 from collections import defaultdict
 
@@ -129,9 +129,9 @@ class MeshOPCR(object):
 
     def _rotatemesh(self):
         """Rotates mesh theta radians around Z-axis."""
-        zrotmat = matrix([[math.cos(self.theta),(-1*math.sin(self.theta)),0],[math.sin(self.theta),math.cos(self.theta),0],[0,0,1]])
+        zrotmat = asmatrix([[math.cos(self.theta),(-1*math.sin(self.theta)),0],[math.sin(self.theta),math.cos(self.theta),0],[0,0,1]])
         
-        vert_matrix = mat(self.MeshRotated.vertices)
+        vert_matrix = asmatrix(self.MeshRotated.vertices)
         rotated_verts = row_stack([transpose(zrotmat * transpose(vert)) for vert in vert_matrix])
         self.MeshRotated.vertices = array(rotated_verts)
 

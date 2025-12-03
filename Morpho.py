@@ -9,13 +9,10 @@ command line. It contains the application GUI and calls subsequent modules plyth
 '''
 
 import os
-os.environ['ETS_TOOLKIT'] = 'qt4'
-os.environ['QT_API'] = 'pyqt'
+os.environ['ETS_TOOLKIT'] = 'qt'
+os.environ['QT_API'] = 'pyqt5'
 
 import sys
-import sip
-sip.setapi('QString', 2)
-
 import topomesh
 
 from math import log
@@ -24,9 +21,9 @@ from traits.api import HasTraits, Instance
 from traitsui.api import View, Item
 from mayavi.core.ui.api import MlabSceneModel
 from tvtk.pyface.scene_editor import SceneEditor
-from PyQt4 import QtGui
+from PyQt5 import QtWidgets, QtGui
         
-class MainWidget(QtGui.QWidget):
+class MainWidget(QtWidgets.QWidget):
     """ Class for primary UI window."""
     
     def __init__(self):
@@ -46,15 +43,15 @@ class MainWidget(QtGui.QWidget):
         #=======================================================================
         # Tab layout
         #=======================================================================
-        self.tab_widget = QtGui.QTabWidget()
+        self.tab_widget = QtWidgets.QTabWidget()
         
-        self.tab1 = QtGui.QWidget()
-        self.tab1layout = QtGui.QGridLayout()
+        self.tab1 = QtWidgets.QWidget()
+        self.tab1layout = QtWidgets.QGridLayout()
         self.tab1layout.setSpacing(10)
         self.tab1.setLayout(self.tab1layout)
         
-        self.tab2 = QtGui.QWidget()
-        self.tab2layout = QtGui.QGridLayout()
+        self.tab2 = QtWidgets.QWidget()
+        self.tab2layout = QtWidgets.QGridLayout()
         self.tab2layout.setSpacing(10)
         self.tab2.setLayout(self.tab2layout)
         
@@ -64,43 +61,43 @@ class MainWidget(QtGui.QWidget):
         #=======================================================================
         # UI widgets
         #=======================================================================
-        self.openbutton = QtGui.QPushButton("Open File")
-        self.opendirbutton = QtGui.QPushButton("Open Directory")
-        self.openlabel = QtGui.QLabel("") 
+        self.openbutton = QtWidgets.QPushButton("Open File")
+        self.opendirbutton = QtWidgets.QPushButton("Open Directory")
+        self.openlabel = QtWidgets.QLabel("") 
         
         # Topography and options window widgets
-        self.dnecheck = QtGui.QCheckBox("DNE")
+        self.dnecheck = QtWidgets.QCheckBox("DNE")
         self.dnecheck.toggle()
-        self.dnebutton = QtGui.QPushButton("Options")
+        self.dnebutton = QtWidgets.QPushButton("Options")
         
-        self.rficheck = QtGui.QCheckBox("RFI")
+        self.rficheck = QtWidgets.QCheckBox("RFI")
         self.rficheck.toggle()
         
-        self.opcrcheck = QtGui.QCheckBox("OPCR")
+        self.opcrcheck = QtWidgets.QCheckBox("OPCR")
         self.opcrcheck.toggle()
-        self.opcrbutton = QtGui.QPushButton("Options")
+        self.opcrbutton = QtWidgets.QPushButton("Options")
         
         # Topography calculation buttons
-        self.calcfilebutton = QtGui.QPushButton("Process File")
-        self.calcdirbutton = QtGui.QPushButton("Process Directory")
+        self.calcfilebutton = QtWidgets.QPushButton("Process File")
+        self.calcdirbutton = QtWidgets.QPushButton("Process Directory")
            
         # Contents of mesh tools tab
-        self.implicit_fair_check = QtGui.QCheckBox("Implicit fair smooth")
+        self.implicit_fair_check = QtWidgets.QCheckBox("Implicit fair smooth")
         
-        self.implicit_fair_iterations_label = QtGui.QLabel("Iterations")
-        self.implicit_fair_iterations = QtGui.QLineEdit("3")
+        self.implicit_fair_iterations_label = QtWidgets.QLabel("Iterations")
+        self.implicit_fair_iterations = QtWidgets.QLineEdit("3")
         
-        self.implicit_fair_step_size_label = QtGui.QLabel("Step size")
-        self.implicit_fair_step_size = QtGui.QLineEdit("0.1")
+        self.implicit_fair_step_size_label = QtWidgets.QLabel("Step size")
+        self.implicit_fair_step_size = QtWidgets.QLineEdit("0.1")
         
-        self.implicit_fair_label = QtGui.QLabel("This will output implicit faired meshes.")
-        self.implicit_fair_label2 = QtGui.QLabel("For single files, this will update current mesh in view.") 
+        self.implicit_fair_label = QtWidgets.QLabel("This will output implicit faired meshes.")
+        self.implicit_fair_label2 = QtWidgets.QLabel("For single files, this will update current mesh in view.") 
         
-        self.implicit_fair_file = QtGui.QPushButton("Process File")
-        self.implicit_fair_dir = QtGui.QPushButton("Process Directory")
+        self.implicit_fair_file = QtWidgets.QPushButton("Process File")
+        self.implicit_fair_dir = QtWidgets.QPushButton("Process Directory")
         
         # Output log
-        self.morpholog = QtGui.QTextEdit()
+        self.morpholog = QtWidgets.QTextEdit()
         self.morpholog.setReadOnly(1)
         
         # 3D view
@@ -128,7 +125,7 @@ class MainWidget(QtGui.QWidget):
         #=======================================================================
         # UI grid layout
         #=======================================================================
-        grid = QtGui.QGridLayout()
+        grid = QtWidgets.QGridLayout()
         grid.setSpacing(10)
         
         grid.addWidget(self.openbutton, 0, 0)
@@ -170,11 +167,11 @@ class MainWidget(QtGui.QWidget):
                      
     def OpenFileDialog(self):
         """Method for loading .ply surface mesh files."""
-        filepath = QtGui.QFileDialog.getOpenFileName(self, 'Open File', self.open_file_dialog_path)
+        filepath, _ = QtWidgets.QFileDialog.getOpenFileName(self, 'Open File', self.open_file_dialog_path)
         self.filepath = filepath
         self.open_file_dialog_path = os.path.dirname(filepath)
         
-        if not len(filepath):
+        if not filepath:
             return
         
         print("Opening file...")
@@ -187,7 +184,7 @@ class MainWidget(QtGui.QWidget):
         
     def OpenDirDialog(self):
         """Method for selecting a directory for batch processing of .ply surface mesh files."""
-        self.dirpath = QtGui.QFileDialog.getExistingDirectory(self, 'Open Directory', self.open_directory_dialog_path)
+        self.dirpath = QtWidgets.QFileDialog.getExistingDirectory(self, 'Open Directory', self.open_directory_dialog_path)
         self.open_directory_dialog_path = self.dirpath
         
         if not len(self.dirpath):
@@ -450,48 +447,48 @@ class MayaviView(HasTraits):
         
         self.plot3 = self.VisualizeScalars(opcrcolorscalars, opcrcolorlut, scale='linear', colorbar=0)        
 
-class DNEOptionsWindow(QtGui.QDialog):
+class DNEOptionsWindow(QtWidgets.QDialog):
     """Submenu for selecting optional parameters for DNE calculation."""
     def __init__(self, parent=None):
         super(DNEOptionsWindow, self).__init__(parent)
         #=======================================================================
         # Submenu layout
         #=======================================================================
-        self.layout = QtGui.QVBoxLayout()
+        self.layout = QtWidgets.QVBoxLayout()
         self.layout.setSpacing(25)
         
         #=======================================================================
         # Submenu widgets
         #=======================================================================
-        self.OKbutton = QtGui.QPushButton("OK")
+        self.OKbutton = QtWidgets.QPushButton("OK")
         self.OKbutton.clicked.connect(self.OKClose)
         
         # Matrix condition number controls
-        self.dneconditioncontrolcheck = QtGui.QCheckBox("Condition number checking")
+        self.dneconditioncontrolcheck = QtWidgets.QCheckBox("Condition number checking")
         self.dneconditioncontrolcheck.toggle()
         
         # Outlier removal controls
-        self.dneoutliervallabel = QtGui.QLabel("Percentile")
-        self.dneoutlierval = QtGui.QLineEdit("99.9")
+        self.dneoutliervallabel = QtWidgets.QLabel("Percentile")
+        self.dneoutlierval = QtWidgets.QLineEdit("99.9")
         self.dneoutlierval.setFixedWidth(40)
         self.outlierhbox = HBoxWidget([self.dneoutliervallabel, self.dneoutlierval], spacing=6)       
         
-        self.dneoutliertype1 = QtGui.QCheckBox("Energy x area")
+        self.dneoutliertype1 = QtWidgets.QCheckBox("Energy x area")
         self.dneoutliertype1.toggle()
-        self.dneoutliertype2 = QtGui.QCheckBox("Energy")
-        self.dneoutlierbuttons = QtGui.QButtonGroup()
+        self.dneoutliertype2 = QtWidgets.QCheckBox("Energy")
+        self.dneoutlierbuttons = QtWidgets.QButtonGroup()
         self.dneoutlierbuttons.addButton(self.dneoutliertype1)
         self.dneoutlierbuttons.addButton(self.dneoutliertype2)
         self.outliervgroup = VGroupBoxWidget('Outlier removal', [self.dneoutliertype1, self.dneoutliertype2, self.outlierhbox])       
         
         # Smoothing controls
-        self.dneiterationlabel = QtGui.QLabel("Iterations")
-        self.dneiteration = QtGui.QLineEdit("3")
+        self.dneiterationlabel = QtWidgets.QLabel("Iterations")
+        self.dneiteration = QtWidgets.QLineEdit("3")
         self.dneiteration.setFixedWidth(40)
         self.fairithbox = HBoxWidget([self.dneiterationlabel, self.dneiteration])
         
-        self.dnestepsizelabel = QtGui.QLabel("Step size")
-        self.dnestepsize = QtGui.QLineEdit("0.1")
+        self.dnestepsizelabel = QtWidgets.QLabel("Step size")
+        self.dnestepsize = QtWidgets.QLineEdit("0.1")
         self.dnestepsize.setFixedWidth(40)     
         self.fairesthbox = HBoxWidget([self.dnestepsizelabel, self.dnestepsize]) 
         
@@ -499,18 +496,18 @@ class DNEOptionsWindow(QtGui.QDialog):
         self.fairvgroup.setChecked(0)
         
         # Visualization control widgets
-        self.dneabsmaxlabel = QtGui.QLabel("Max")
-        self.dneabsmaxval = QtGui.QLineEdit("1.0")
+        self.dneabsmaxlabel = QtWidgets.QLabel("Max")
+        self.dneabsmaxval = QtWidgets.QLineEdit("1.0")
         self.dneabsmaxval.setFixedWidth(40)
-        self.dneabsminlabel = QtGui.QLabel("Min")
-        self.dneabsminval = QtGui.QLineEdit("0.0")
+        self.dneabsminlabel = QtWidgets.QLabel("Min")
+        self.dneabsminval = QtWidgets.QLineEdit("0.0")
         self.dneabsminval.setFixedWidth(40)
         self.vishbox = HBoxWidget([self.dneabsminlabel, self.dneabsminval, self.dneabsmaxlabel, self.dneabsmaxval])                 
         
-        self.dnerelvischeck = QtGui.QCheckBox("Relative scale")
+        self.dnerelvischeck = QtWidgets.QCheckBox("Relative scale")
         self.dnerelvischeck.toggle()
-        self.dneabsvischeck = QtGui.QCheckBox("Absolute scale")
-        self.dnevisbuttons = QtGui.QButtonGroup()
+        self.dneabsvischeck = QtWidgets.QCheckBox("Absolute scale")
+        self.dnevisbuttons = QtWidgets.QButtonGroup()
         self.dnevisbuttons.addButton(self.dnerelvischeck)
         self.dnevisbuttons.addButton(self.dneabsvischeck)
         self.visvgroup = VGroupBoxWidget('Visualize DNE', [self.dnerelvischeck, self.dneabsvischeck, self.vishbox])
@@ -536,26 +533,26 @@ class DNEOptionsWindow(QtGui.QDialog):
         """Closes submenu on OK."""
         self.close()
         
-class OPCROptionsWindow(QtGui.QDialog):
+class OPCROptionsWindow(QtWidgets.QDialog):
     """Submenu for selecting optional parameters for OPCR calculation."""
     def __init__(self, parent=None):
         super(OPCROptionsWindow, self).__init__(parent)
         #=======================================================================
         # Submenu layout
         #=======================================================================
-        self.layout = QtGui.QVBoxLayout()
+        self.layout = QtWidgets.QVBoxLayout()
         self.layout.setSpacing(20)
         
         #=======================================================================
         # Submenu widgets
         #=======================================================================
-        self.OKbutton = QtGui.QPushButton("OK")
+        self.OKbutton = QtWidgets.QPushButton("OK")
         self.OKbutton.clicked.connect(self.OKClose)
         
         # Visualization and minimum patch size controls
-        self.visualizeopcrcheck = QtGui.QCheckBox("Visualize OPCR")
-        self.opcrlabel = QtGui.QLabel("Minimum patch count")
-        self.opcrminpatch = QtGui.QLineEdit("3")
+        self.visualizeopcrcheck = QtWidgets.QCheckBox("Visualize OPCR")
+        self.opcrlabel = QtWidgets.QLabel("Minimum patch count")
+        self.opcrminpatch = QtWidgets.QLineEdit("3")
         self.opcrminpatch.setFixedWidth(40)
         self.minpatchhbox = HBoxWidget([self.opcrlabel, self.opcrminpatch], spacing=15)
         
@@ -575,7 +572,7 @@ class OPCROptionsWindow(QtGui.QDialog):
         """Closes submenu on OK."""
         self.close() 
         
-class HBoxWidget(QtGui.QWidget):
+class HBoxWidget(QtWidgets.QWidget):
     """Generic class for creating QWidgets with QHBoxLayout with standard properties.
     
     Args:
@@ -590,14 +587,14 @@ class HBoxWidget(QtGui.QWidget):
     
     def initUI(self, widgetlist, indent, spacing):
         """Adds widgets to and sets layout of HBoxWidget object."""
-        self.hbox = QtGui.QHBoxLayout()
+        self.hbox = QtWidgets.QHBoxLayout()
         for x in widgetlist:
             self.hbox.addWidget(x)
         self.hbox.setContentsMargins(indent,0,0,0)
         self.hbox.setSpacing(spacing)
         self.setLayout(self.hbox)
         
-class VGroupBoxWidget(QtGui.QGroupBox):
+class VGroupBoxWidget(QtWidgets.QGroupBox):
     """Generic class for creating QGroupBox with QVBoxLayout with standard properties.
     
     Args:
@@ -611,7 +608,7 @@ class VGroupBoxWidget(QtGui.QGroupBox):
         
     def initUI(self, widgetlist):
         """Adds widgets to and sets layout of VGroupBoxWidget object."""
-        self.vbox = QtGui.QVBoxLayout()
+        self.vbox = QtWidgets.QVBoxLayout()
         self.vbox.setContentsMargins(10,10,10,10)
         self.vbox.setSpacing(10)
         for x in widgetlist:
@@ -648,12 +645,16 @@ class OutLog:
         if self.out:
             self.out.write(m)
 
+    def flush(self):
+        """Required for Python 3 stdout/stderr compatibility."""
+        pass
+
 def main():
     """Main application loop."""
+    app = QtWidgets.QApplication(sys.argv)
     window = MainWidget()
     window.show()
-    sys.exit(QtGui.qApp.exec_())
+    sys.exit(app.exec())
 
 if __name__ == "__main__":
     main()
-    

@@ -7,7 +7,7 @@ Contains functions for executing an implicit fairing smooth on a 3D mesh.
 '''
 
 from math import acos, tan
-from numpy import sqrt, spacing, diag, mat 
+from numpy import sqrt, spacing, diag, asmatrix 
 from numpy.linalg import cholesky, solve, LinAlgError
 from scipy.sparse import identity, lil_matrix
 
@@ -78,7 +78,7 @@ def smooth(vertex, faceindex, iternum, stepsize, vert_tri_dict):
     sparseidentity = identity(len(vertex))
 
     tochol = sparseidentity - (stepsize*L)
-    tochol = mat(tochol)
+    tochol = asmatrix(tochol.toarray())
 
     try:
         R = cholesky(tochol).T # Upper-triangular matrix cholesky decomposition (.T makes it upper, normally it spits out lower)
