@@ -1,12 +1,26 @@
 # -*- mode: python ; coding: utf-8 -*-
 
+from PyInstaller.utils.hooks import collect_submodules, collect_data_files, copy_metadata
+
+# Collect all submodules for traitsui and pyface Qt backends
+hiddenimports = collect_submodules('traitsui.qt')
+hiddenimports += collect_submodules('pyface.qt')
+hiddenimports += collect_submodules('pyface.ui.qt')
+hiddenimports += collect_submodules('tvtk')
+hiddenimports += collect_submodules('mayavi')
+
+# Collect entry points metadata
+datas = copy_metadata('traitsui')
+datas += copy_metadata('pyface')
+datas += copy_metadata('mayavi')
+datas += copy_metadata('traits')
 
 a = Analysis(
     ['Morpho.py'],
     pathex=['.'],
     binaries=[],
-    datas=[],
-    hiddenimports=[
+    datas=datas,
+    hiddenimports=hiddenimports + [
         # Local modules
         'topomesh',
         'plython',
@@ -16,19 +30,6 @@ a = Analysis(
         'implicitfair',
         'normcore',
         'render',
-        # TraitsUI Qt toolkit
-        'traitsui.qt',
-        'traitsui.qt.api',
-        'pyface.qt',
-        'pyface.qt.api',
-        'pyface.ui.qt',
-        'pyface.ui.qt.api',
-        # Mayavi
-        'mayavi',
-        'mayavi.core.ui.api',
-        'tvtk.pyface.scene_editor',
-        'tvtk.pyface.api',
-        'tvtk.api',
         # VTK
         'vtkmodules',
         'vtkmodules.all',
