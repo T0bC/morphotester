@@ -7,6 +7,7 @@ hiddenimports = collect_submodules('traitsui.qt')
 hiddenimports += collect_submodules('pyface.qt')
 hiddenimports += collect_submodules('pyface.ui.qt')
 hiddenimports += collect_submodules('pyface.timer')
+hiddenimports += collect_submodules('pyface')  # Catch all pyface modules
 hiddenimports += collect_submodules('tvtk')
 hiddenimports += collect_submodules('mayavi')
 
