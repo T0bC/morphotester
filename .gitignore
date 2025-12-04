@@ -34,3 +34,8 @@ Thumbs.db
 ###############
 build/
 dist/
+
+# Sample Data #
+###############
+Sample Data/
+!Sample Data.zip
