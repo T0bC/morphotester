@@ -37,6 +37,9 @@ a = Analysis(
         # VTK
         'vtkmodules',
         'vtkmodules.all',
+        'vtkmodules.util',
+        'vtkmodules.util.colors',
+        'vtkmodules.util.numpy_support',
         # PyQt5
         'PyQt5',
         'PyQt5.QtCore',
