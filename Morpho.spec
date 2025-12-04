@@ -16,8 +16,11 @@ datas += copy_metadata('pyface')
 datas += copy_metadata('mayavi')
 datas += copy_metadata('traits')
 
-# Collect tvtk_classes data files (required for TVTK to work)
+# Collect all data files for ETS packages
 datas += collect_data_files('tvtk')
+datas += collect_data_files('mayavi')
+datas += collect_data_files('pyface')
+datas += collect_data_files('traitsui')
 
 a = Analysis(
     ['Morpho.py'],
@@ -66,7 +69,7 @@ exe = EXE(
     strip=False,
     upx=True,
     upx_exclude=[],
-    console=False,
+    console=True,  # Temporarily enable for debugging
     disable_windowed_traceback=False,
     argv_emulation=False,
     target_arch=None,
