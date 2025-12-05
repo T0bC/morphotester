@@ -13,6 +13,8 @@
 
 ## Overview
 
+![MorphoTester Interface](www/MorphoTester.png)
+
 MorphoTester is a scientific computing application for quantifying topographic shape from three-dimensional triangulated meshes representing anatomical shape data. Shape is described via three metrics which characterize distinct aspects of form:
 
 - **Curvature** – Dirichlet Normal Energy (Bunn et al., 2011; Winchester, in preparation)
