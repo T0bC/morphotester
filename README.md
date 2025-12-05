@@ -159,7 +159,7 @@ This is not an issue with MorphoTester, but instead requires care in preparing s
 
 ### Version 1.2
 
-**Updated by:** [Your Name]
+**Updated by:** [Tobias]
 
 This version updates MorphoTester from Python 2.x to Python 3.12 with the following changes:
 
