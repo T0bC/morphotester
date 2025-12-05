@@ -3,7 +3,7 @@
 ## Version 1.2
 
 **Original Author:** Julia Winchester (<julia.winchester@stonybrook.edu>)  
-**Updated by:** [Your Name] (<your.email@example.com>)
+**Updated by:** [Tobias] ([GitHub Profile](https://github.com/T0bC))
 
 ---
 
