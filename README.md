@@ -63,7 +63,9 @@ To create a standalone executable (`.exe` on Windows, `.app`/`.dmg` on macOS), u
 
 ## File Type and Size
 
-MorphoTester accepts `.ply` Stanford PLY format surface mesh files. Triangulated surface mesh files (surfaces comprised of multiple interconnected triangular polygons in three-dimensional space) can be generally described by the number of triangular polygons comprising each mesh.
+MorphoTester accepts `.ply` Stanford PLY format surface mesh files (ASCII and binary). Triangulated surface mesh files (surfaces comprised of multiple interconnected triangular polygons in three-dimensional space) can be generally described by the number of triangular polygons comprising each mesh.
+
+**Note on vertex properties (new in v1.2):** PLY files may contain additional vertex properties beyond the required x, y, z coordinates (e.g., vertex colors, normals, alpha channels). MorphoTester now automatically extracts only the spatial coordinates and ignores any extra properties, so files exported with color or other attributes will load correctly. Previous versions required PLY files to contain only x, y, z vertex data.
 
 **Performance considerations:**
 
